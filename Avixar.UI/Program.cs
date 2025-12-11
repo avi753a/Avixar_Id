@@ -47,11 +47,6 @@ try
     catch (Exception ex)
     {
         Log.Error(ex, "Failed to connect to Redis. Caching will be disabled.");
-        // Register a dummy or let DI fail if ICacheService is required?
-        // RedisCacheService depends on IConnectionMultiplexer. If not registered, it will fail.
-        // So we should register a disconnected multiplexer if possible, or just let it be.
-        // But abortConnect=false usually prevents the exception here.
-        // The try-catch is a second layer of defense.
     }
 
     // Register Repositories
