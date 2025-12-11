@@ -1,4 +1,4 @@
-﻿using Avixar.Entity.Entities;
+using Avixar.Entity;
 
 namespace Avixar.Data
 {

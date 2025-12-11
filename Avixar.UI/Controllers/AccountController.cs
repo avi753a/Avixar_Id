@@ -1,13 +1,13 @@
 using Avixar.Domain;
 using Avixar.Entity;
-using Avixar.Entity.Entities;
-using Avixar.Entity.Models;
+using Avixar.Entity;
+using Avixar.Entity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Security.Claims;
 
-namespace Avixar.UI.Controllers
+namespace Avixar.UI
 {
     [Authorize]
     public class AccountController : Controller

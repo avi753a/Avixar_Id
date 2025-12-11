@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict K6cE9AUCwtXZTP86ccyFKJAf2nItkCmFzZ7xcKjCZbpIfjmL5Z02Vb0H9ATyidt
+\restrict 1H1qrfvTke3sIevggphp2hhnjnobZHzemFeT2dTaRD17kGX53uZzYBbOhQp3u6A
 
 -- Dumped from database version 18.1
 -- Dumped by pg_dump version 18.1
@@ -425,13 +425,69 @@ ALTER SEQUENCE public.keystore_history_history_id_seq OWNED BY public.keystore_h
 
 
 --
+-- Name: org_member_roles; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.org_member_roles (
+    "Id" uuid DEFAULT gen_random_uuid() NOT NULL,
+    "MemberId" uuid NOT NULL,
+    "RoleId" integer NOT NULL,
+    "AssignedAt" timestamp without time zone DEFAULT now(),
+    "ExpiresAt" timestamp without time zone
+);
+
+
+ALTER TABLE public.org_member_roles OWNER TO postgres;
+
+--
+-- Name: org_member_roles_history; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.org_member_roles_history (
+    "Id" uuid,
+    "MemberId" uuid,
+    "RoleId" integer,
+    "AssignedAt" timestamp without time zone,
+    "ExpiresAt" timestamp without time zone,
+    history_id integer NOT NULL,
+    history_event text,
+    history_created_at timestamp without time zone DEFAULT now()
+);
+
+
+ALTER TABLE public.org_member_roles_history OWNER TO postgres;
+
+--
+-- Name: org_member_roles_history_history_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.org_member_roles_history_history_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.org_member_roles_history_history_id_seq OWNER TO postgres;
+
+--
+-- Name: org_member_roles_history_history_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.org_member_roles_history_history_id_seq OWNED BY public.org_member_roles_history.history_id;
+
+
+--
 -- Name: org_roles; Type: TABLE; Schema: public; Owner: appuser
 --
 
 CREATE TABLE public.org_roles (
     "Id" integer NOT NULL,
     "RoleName" text NOT NULL,
-    "Description" text
+    "Description" text,
+    "OrgTypeId" integer
 );
 
 
@@ -469,7 +525,8 @@ CREATE TABLE public.org_roles_history (
     "Description" text,
     history_id integer NOT NULL,
     history_event text,
-    history_created_at timestamp without time zone DEFAULT now()
+    history_created_at timestamp without time zone DEFAULT now(),
+    "OrgTypeId" integer
 );
 
 
@@ -498,14 +555,89 @@ ALTER SEQUENCE public.org_roles_history_history_id_seq OWNED BY public.org_roles
 
 
 --
+-- Name: org_types; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.org_types (
+    "Id" integer NOT NULL,
+    "Name" text NOT NULL,
+    "Description" text,
+    "CreatedAt" timestamp without time zone DEFAULT now()
+);
+
+
+ALTER TABLE public.org_types OWNER TO postgres;
+
+--
+-- Name: org_types_Id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public."org_types_Id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public."org_types_Id_seq" OWNER TO postgres;
+
+--
+-- Name: org_types_Id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public."org_types_Id_seq" OWNED BY public.org_types."Id";
+
+
+--
+-- Name: org_types_history; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.org_types_history (
+    "Id" integer,
+    "Name" text,
+    "Description" text,
+    "CreatedAt" timestamp without time zone,
+    history_id integer NOT NULL,
+    history_event text,
+    history_created_at timestamp without time zone DEFAULT now()
+);
+
+
+ALTER TABLE public.org_types_history OWNER TO postgres;
+
+--
+-- Name: org_types_history_history_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.org_types_history_history_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.org_types_history_history_id_seq OWNER TO postgres;
+
+--
+-- Name: org_types_history_history_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.org_types_history_history_id_seq OWNED BY public.org_types_history.history_id;
+
+
+--
 -- Name: org_users; Type: TABLE; Schema: public; Owner: appuser
 --
 
 CREATE TABLE public.org_users (
     "UserId" uuid NOT NULL,
     "OrgId" uuid NOT NULL,
-    "RoleId" integer,
-    "JoinedAt" timestamp without time zone DEFAULT now()
+    "JoinedAt" timestamp without time zone DEFAULT now(),
+    "Id" uuid DEFAULT gen_random_uuid() NOT NULL
 );
 
 
@@ -518,11 +650,11 @@ ALTER TABLE public.org_users OWNER TO appuser;
 CREATE TABLE public.org_users_history (
     "UserId" uuid CONSTRAINT "org_users_UserId_not_null" NOT NULL,
     "OrgId" uuid CONSTRAINT "org_users_OrgId_not_null" NOT NULL,
-    "RoleId" integer,
     "JoinedAt" timestamp without time zone,
     history_id integer NOT NULL,
     history_event text,
-    history_created_at timestamp without time zone DEFAULT now()
+    history_created_at timestamp without time zone DEFAULT now(),
+    "Id" uuid
 );
 
 
@@ -560,7 +692,9 @@ CREATE TABLE public.orgs (
     "Slug" text,
     "IsPersonal" boolean DEFAULT false,
     "CreatedAt" timestamp without time zone DEFAULT now(),
-    "UpdatedAt" timestamp without time zone DEFAULT now()
+    "UpdatedAt" timestamp without time zone DEFAULT now(),
+    "TypeId" integer DEFAULT 1,
+    "LogoUrl" text
 );
 
 
@@ -579,7 +713,9 @@ CREATE TABLE public.orgs_history (
     "UpdatedAt" timestamp without time zone,
     history_id integer NOT NULL,
     history_event text,
-    history_created_at timestamp without time zone DEFAULT now()
+    history_created_at timestamp without time zone DEFAULT now(),
+    "TypeId" integer,
+    "LogoUrl" text
 );
 
 
@@ -930,6 +1066,13 @@ ALTER TABLE ONLY public.keystore_history ALTER COLUMN history_id SET DEFAULT nex
 
 
 --
+-- Name: org_member_roles_history history_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.org_member_roles_history ALTER COLUMN history_id SET DEFAULT nextval('public.org_member_roles_history_history_id_seq'::regclass);
+
+
+--
 -- Name: org_roles Id; Type: DEFAULT; Schema: public; Owner: appuser
 --
 
@@ -941,6 +1084,20 @@ ALTER TABLE ONLY public.org_roles ALTER COLUMN "Id" SET DEFAULT nextval('public.
 --
 
 ALTER TABLE ONLY public.org_roles_history ALTER COLUMN history_id SET DEFAULT nextval('public.org_roles_history_history_id_seq'::regclass);
+
+
+--
+-- Name: org_types Id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.org_types ALTER COLUMN "Id" SET DEFAULT nextval('public."org_types_Id_seq"'::regclass);
+
+
+--
+-- Name: org_types_history history_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.org_types_history ALTER COLUMN history_id SET DEFAULT nextval('public.org_types_history_history_id_seq'::regclass);
 
 
 --
@@ -1025,11 +1182,35 @@ ALTER TABLE ONLY public.keystore_history
 
 
 --
--- Name: org_roles org_roles_RoleName_key; Type: CONSTRAINT; Schema: public; Owner: appuser
+-- Name: org_member_roles org_member_roles_MemberId_RoleId_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.org_member_roles
+    ADD CONSTRAINT "org_member_roles_MemberId_RoleId_key" UNIQUE ("MemberId", "RoleId");
+
+
+--
+-- Name: org_member_roles_history org_member_roles_history_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.org_member_roles_history
+    ADD CONSTRAINT org_member_roles_history_pkey PRIMARY KEY (history_id);
+
+
+--
+-- Name: org_member_roles org_member_roles_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.org_member_roles
+    ADD CONSTRAINT org_member_roles_pkey PRIMARY KEY ("Id");
+
+
+--
+-- Name: org_roles org_roles_OrgTypeId_RoleName_key; Type: CONSTRAINT; Schema: public; Owner: appuser
 --
 
 ALTER TABLE ONLY public.org_roles
-    ADD CONSTRAINT "org_roles_RoleName_key" UNIQUE ("RoleName");
+    ADD CONSTRAINT "org_roles_OrgTypeId_RoleName_key" UNIQUE ("OrgTypeId", "RoleName");
 
 
 --
@@ -1049,6 +1230,38 @@ ALTER TABLE ONLY public.org_roles
 
 
 --
+-- Name: org_types org_types_Name_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.org_types
+    ADD CONSTRAINT "org_types_Name_key" UNIQUE ("Name");
+
+
+--
+-- Name: org_types_history org_types_history_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.org_types_history
+    ADD CONSTRAINT org_types_history_pkey PRIMARY KEY (history_id);
+
+
+--
+-- Name: org_types org_types_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.org_types
+    ADD CONSTRAINT org_types_pkey PRIMARY KEY ("Id");
+
+
+--
+-- Name: org_users org_users_UserId_OrgId_key; Type: CONSTRAINT; Schema: public; Owner: appuser
+--
+
+ALTER TABLE ONLY public.org_users
+    ADD CONSTRAINT "org_users_UserId_OrgId_key" UNIQUE ("UserId", "OrgId");
+
+
+--
 -- Name: org_users_history org_users_history_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1061,7 +1274,7 @@ ALTER TABLE ONLY public.org_users_history
 --
 
 ALTER TABLE ONLY public.org_users
-    ADD CONSTRAINT org_users_pkey PRIMARY KEY ("UserId", "OrgId");
+    ADD CONSTRAINT org_users_pkey PRIMARY KEY ("Id");
 
 
 --
@@ -1215,6 +1428,13 @@ CREATE INDEX "IX_Organizations_Slug" ON public.orgs USING btree ("Slug");
 
 
 --
+-- Name: IX_Orgs_TypeId; Type: INDEX; Schema: public; Owner: appuser
+--
+
+CREATE INDEX "IX_Orgs_TypeId" ON public.orgs USING btree ("TypeId");
+
+
+--
 -- Name: IX_UserSecrets_EmailHash; Type: INDEX; Schema: public; Owner: appuser
 --
 
@@ -1250,10 +1470,24 @@ CREATE TRIGGER trg_keystore_audit AFTER DELETE OR UPDATE ON public.keystore FOR 
 
 
 --
+-- Name: org_member_roles trg_org_member_roles_audit; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER trg_org_member_roles_audit AFTER DELETE OR UPDATE ON public.org_member_roles FOR EACH ROW EXECUTE FUNCTION public.trg_fn_log_history();
+
+
+--
 -- Name: org_roles trg_org_roles_audit; Type: TRIGGER; Schema: public; Owner: appuser
 --
 
 CREATE TRIGGER trg_org_roles_audit AFTER DELETE OR UPDATE ON public.org_roles FOR EACH ROW EXECUTE FUNCTION public.trg_fn_log_history();
+
+
+--
+-- Name: org_types trg_org_types_audit; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER trg_org_types_audit AFTER DELETE OR UPDATE ON public.org_types FOR EACH ROW EXECUTE FUNCTION public.trg_fn_log_history();
 
 
 --
@@ -1299,6 +1533,30 @@ CREATE TRIGGER trg_users_audit AFTER DELETE OR UPDATE ON public.users FOR EACH R
 
 
 --
+-- Name: org_member_roles org_member_roles_MemberId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.org_member_roles
+    ADD CONSTRAINT "org_member_roles_MemberId_fkey" FOREIGN KEY ("MemberId") REFERENCES public.org_users("Id") ON DELETE CASCADE;
+
+
+--
+-- Name: org_member_roles org_member_roles_RoleId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.org_member_roles
+    ADD CONSTRAINT "org_member_roles_RoleId_fkey" FOREIGN KEY ("RoleId") REFERENCES public.org_roles("Id") ON DELETE CASCADE;
+
+
+--
+-- Name: org_roles org_roles_OrgTypeId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: appuser
+--
+
+ALTER TABLE ONLY public.org_roles
+    ADD CONSTRAINT "org_roles_OrgTypeId_fkey" FOREIGN KEY ("OrgTypeId") REFERENCES public.org_types("Id");
+
+
+--
 -- Name: org_users org_users_OrgId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: appuser
 --
 
@@ -1307,19 +1565,19 @@ ALTER TABLE ONLY public.org_users
 
 
 --
--- Name: org_users org_users_RoleId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: appuser
---
-
-ALTER TABLE ONLY public.org_users
-    ADD CONSTRAINT "org_users_RoleId_fkey" FOREIGN KEY ("RoleId") REFERENCES public.org_roles("Id");
-
-
---
 -- Name: org_users org_users_UserId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: appuser
 --
 
 ALTER TABLE ONLY public.org_users
     ADD CONSTRAINT "org_users_UserId_fkey" FOREIGN KEY ("UserId") REFERENCES public.users("Id") ON DELETE CASCADE;
+
+
+--
+-- Name: orgs orgs_TypeId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: appuser
+--
+
+ALTER TABLE ONLY public.orgs
+    ADD CONSTRAINT "orgs_TypeId_fkey" FOREIGN KEY ("TypeId") REFERENCES public.org_types("Id") ON DELETE SET DEFAULT;
 
 
 --
@@ -1358,5 +1616,5 @@ ALTER TABLE ONLY public.users
 -- PostgreSQL database dump complete
 --
 
-\unrestrict K6cE9AUCwtXZTP86ccyFKJAf2nItkCmFzZ7xcKjCZbpIfjmL5Z02Vb0H9ATyidt
+\unrestrict 1H1qrfvTke3sIevggphp2hhnjnobZHzemFeT2dTaRD17kGX53uZzYBbOhQp3u6A
 

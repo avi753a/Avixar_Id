@@ -1,5 +1,5 @@
 using Avixar.Domain.DTOs;
-using Avixar.Domain.Interfaces;
+using Avixar.Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;

@@ -1,13 +1,13 @@
 using Avixar.Data;
 using Avixar.Domain;
-using Avixar.Entity.Entities;
-using Avixar.Infrastructure.Services;
+using Avixar.Entity;
+using Avixar.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Security.Claims;
 
-namespace Avixar.UI.Controllers
+namespace Avixar.UI
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -99,7 +99,7 @@ namespace Avixar.UI.Controllers
         /// </summary>
         [HttpPost("send-otp")]
         [Authorize]
-        public async Task<IActionResult> SendOtp([FromBody] SendOtpRequest request)
+        public async Task<IActionResult> SendOtp([FromBody] SendOtpRequestDto request)
         {
             try
             {
@@ -149,7 +149,7 @@ namespace Avixar.UI.Controllers
         /// </summary>
         [HttpPost("validate-otp")]
         [Authorize]
-        public async Task<IActionResult> ValidateOtp([FromBody] ValidateOtpRequest request)
+        public async Task<IActionResult> ValidateOtp([FromBody] ValidateOtpRequestDto request)
         {
             try
             {
@@ -227,19 +227,5 @@ namespace Avixar.UI.Controllers
                 return StatusCode(500, new { message = "An error occurred" });
             }
         }
-    }
-
-    // Request models
-    public class SendOtpRequest
-    {
-        public string Purpose { get; set; } = string.Empty; // TwoFactorAuth, EmailUpdate
-        public string? Email { get; set; } // For email update, send to new email
-        public int? ExpirySeconds { get; set; } // Custom expiry (1-31536000)
-    }
-
-    public class ValidateOtpRequest
-    {
-        public string Code { get; set; } = string.Empty;
-        public string Purpose { get; set; } = string.Empty;
     }
 }

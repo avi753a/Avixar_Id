@@ -1,9 +1,13 @@
 using StackExchange.Redis;
 using System.Text.Json;
+using Avixar.Infrastructure;
 
-namespace Avixar.Domain
+namespace Avixar.Infrastructure
 {
-    public class RedisCacheService : ICacheService
+    /// <summary>
+    /// Redis cache service implementation
+    /// </summary>
+    public class RedisCacheService
     {
         private readonly IConnectionMultiplexer _redis;
 
@@ -34,6 +38,11 @@ namespace Avixar.Domain
         {
             var db = _redis.GetDatabase();
             await db.KeyDeleteAsync(key);
+        }
+
+        public async Task DeleteAsync(string key)
+        {
+            await RemoveAsync(key);
         }
     }
 }

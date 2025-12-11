@@ -1,5 +1,5 @@
-﻿using Avixar.Entity.Entities;
-using Avixar.Infrastructure.Extensions;
+using Avixar.Entity;
+using Avixar.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Npgsql;

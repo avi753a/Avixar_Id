@@ -1,5 +1,5 @@
-﻿using Avixar.Entity;
-using Avixar.Entity.Models;
+using Avixar.Entity;
+using Avixar.Entity;
 using System.Security.Claims;
 
 namespace Avixar.Domain

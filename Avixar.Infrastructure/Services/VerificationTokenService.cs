@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using System.Security.Cryptography;
 using System.Text.Json;
 
-namespace Avixar.Infrastructure.Services
+namespace Avixar.Infrastructure
 {
     public class VerificationTokenService
     {

@@ -3,7 +3,7 @@ using CloudinaryDotNet.Actions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 
-namespace Avixar.Infrastructure.Services
+namespace Avixar.Infrastructure
 {
     public class CloudinaryService
     {

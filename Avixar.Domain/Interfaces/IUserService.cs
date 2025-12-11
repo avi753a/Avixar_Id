@@ -1,6 +1,6 @@
 using Avixar.Entity;
-using Avixar.Entity.Entities;
-using Avixar.Entity.Models;
+using Avixar.Entity;
+using Avixar.Entity;
 using Microsoft.AspNetCore.Http;
 
 namespace Avixar.Domain

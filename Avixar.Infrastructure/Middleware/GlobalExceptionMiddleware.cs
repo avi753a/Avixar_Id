@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using System.Text;
 
-namespace Avixar.Infrastructure.Middleware
+namespace Avixar.Infrastructure
 {
     public class GlobalExceptionMiddleware
     {

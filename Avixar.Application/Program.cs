@@ -1,5 +1,5 @@
-using Avixar.Domain.Services;
-using Avixar.Domain.Interfaces;
+using Avixar.Domain;
+using Avixar.Domain;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.OpenApi.Models;
 

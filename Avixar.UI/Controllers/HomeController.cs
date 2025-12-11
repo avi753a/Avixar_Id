@@ -2,9 +2,9 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
-using Avixar.UI.Models;
+using Avixar.UI;
 
-namespace Avixar.UI.Controllers;
+namespace Avixar.UI;
 
 public class HomeController : Controller
 {

@@ -1,9 +1,10 @@
-using Avixar.Infrastructure.Services;
+using Avixar.Infrastructure;
+using Avixar.Entity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace Avixar.UI.Controllers
+namespace Avixar.UI
 {
     [Authorize]
     [ApiController]
@@ -23,7 +24,7 @@ namespace Avixar.UI.Controllers
         /// Send a simple email with subject and body
         /// </summary>
         [HttpPost("send")]
-        public async Task<IActionResult> SendEmail([FromBody] SendEmailRequest request)
+        public async Task<IActionResult> SendEmail([FromBody] SendEmailRequestDto request)
         {
             try
             {
@@ -43,12 +44,5 @@ namespace Avixar.UI.Controllers
                 return StatusCode(500, new { message = "An error occurred while sending email" });
             }
         }
-    }
-
-    public class SendEmailRequest
-    {
-        public string To { get; set; } = string.Empty;
-        public string Subject { get; set; } = string.Empty;
-        public string Body { get; set; } = string.Empty;
     }
 }

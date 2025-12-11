@@ -15,6 +15,6 @@ namespace Avixar.Entity
         // Navigation Properties
         public virtual Wallet? Wallet { get; set; }
         public virtual ICollection<AuditLog> AuditLogs { get; set; } = new List<AuditLog>();
-        public virtual ICollection<Avixar.Entity.Entities.UserAddress> Addresses { get; set; } = new List<Avixar.Entity.Entities.UserAddress>();
+        public virtual ICollection<UserAddress> Addresses { get; set; } = new List<UserAddress>();
     }
 }

@@ -1,4 +1,4 @@
-namespace Avixar.Entity.Models
+namespace Avixar.Entity
 {
     /// <summary>
     /// Represents user credentials retrieved from the database

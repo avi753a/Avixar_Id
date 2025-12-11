@@ -1,8 +1,8 @@
 using Avixar.Entity;
-using Avixar.Entity.Entities;
-using Avixar.Entity.Models;
+using Avixar.Entity;
+using Avixar.Entity;
 using Avixar.Infrastructure;
-using Avixar.Infrastructure.Extensions;
+using Avixar.Infrastructure;
 using BCrypt.Net;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -18,13 +18,15 @@ namespace Avixar.Data
         private readonly string _encKey;
         private readonly string _blindKey;
         private readonly ILogger<UserRepository> _logger;
+        private readonly MongoDbService? _mongoDbService;
 
-        public UserRepository(IConfiguration config, ILogger<UserRepository> logger)
+        public UserRepository(IConfiguration config, ILogger<UserRepository> logger, MongoDbService? mongoDbService = null)
         {
             _connString = config.GetDefaultConnectionString();
             _encKey = config.GetEncryptionKey();
             _blindKey = config.GetBlindIndexKey();
             _logger = logger;
+            _mongoDbService = mongoDbService;
         }
 
         #region sp_sociallogin Logic
@@ -675,6 +677,85 @@ namespace Avixar.Data
                 cmd.Parameters.AddWithValue("email", email);
                 var result = await cmd.ExecuteScalarAsync();
                 return (byte[])result!;
+            }
+        }
+        #endregion
+
+        #region MongoDB - Login History & Security Events
+        public async Task<List<LoginHistory>> GetLoginHistoryAsync(Guid userId, int limit = 50)
+        {
+            try
+            {
+                if (_mongoDbService == null)
+                {
+                    _logger.LogWarning("MongoDB service not available for login history");
+                    return new List<LoginHistory>();
+                }
+
+                _logger.LogInformation("Getting login history for user {UserId}", userId);
+                
+                var filter = MongoDB.Driver.Builders<LoginHistory>.Filter.Eq("user_id", userId);
+                var history = await _mongoDbService.FindAsync("login_history", filter, limit);
+                
+                return history.OrderByDescending(h => h.LoginTime).ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting login history for user {UserId}", userId);
+                throw;
+            }
+        }
+
+        public async Task LogLoginAttemptAsync(LoginHistory log)
+        {
+            try
+            {
+                if (_mongoDbService == null)
+                {
+                    _logger.LogWarning("MongoDB service not available for login logging");
+                    return;
+                }
+
+                log.LoginTime = DateTime.UtcNow;
+                await _mongoDbService.InsertAsync("login_history", log);
+                
+                _logger.LogInformation("Logged login attempt for user {UserId}, Success: {Success}", 
+                    log.UserId, log.Success);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error logging login attempt for user {UserId}", log.UserId);
+                // Don't throw - logging failures shouldn't break authentication
+            }
+        }
+
+        public async Task LogSecurityEventAsync(Guid userId, string eventType, string details)
+        {
+            try
+            {
+                if (_mongoDbService == null)
+                {
+                    _logger.LogWarning("MongoDB service not available for security event logging");
+                    return;
+                }
+
+                var securityEvent = new
+                {
+                    user_id = userId,
+                    event_type = eventType,
+                    details = details,
+                    timestamp = DateTime.UtcNow
+                };
+                
+                await _mongoDbService.InsertAsync("security_events", securityEvent);
+                
+                _logger.LogInformation("Logged security event for user {UserId}: {EventType}", 
+                    userId, eventType);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error logging security event for user {UserId}", userId);
+                // Don't throw - logging failures shouldn't break operations
             }
         }
         #endregion

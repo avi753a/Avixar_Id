@@ -1,15 +1,15 @@
 using Avixar.Domain;
 using Avixar.Entity;
-using Avixar.Entity.Models;
+using Avixar.Entity;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using Avixar.Infrastructure.Services;
+using Avixar.Infrastructure;
 using Avixar.Data;
-using Avixar.Entity.Entities;
+using Avixar.Entity;
 
-namespace Avixar.UI.Controllers
+namespace Avixar.UI
 {
     public class AuthController : Controller
     {

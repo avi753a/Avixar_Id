@@ -4,7 +4,7 @@ using MailKit.Security;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace Avixar.Infrastructure.Services
+namespace Avixar.Infrastructure
 {
     public class EmailService
     {

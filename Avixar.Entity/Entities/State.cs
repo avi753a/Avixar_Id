@@ -1,4 +1,4 @@
-namespace Avixar.Entity.Entities
+namespace Avixar.Entity
 {
     public class State
     {

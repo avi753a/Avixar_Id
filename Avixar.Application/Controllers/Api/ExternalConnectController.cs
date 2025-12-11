@@ -1,5 +1,5 @@
 using Avixar.Domain.DTOs;
-using Avixar.Domain.Services;
+using Avixar.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;

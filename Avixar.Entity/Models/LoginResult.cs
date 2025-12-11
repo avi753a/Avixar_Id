@@ -1,4 +1,4 @@
-namespace Avixar.Entity.Models
+namespace Avixar.Entity
 {
     public class LoginResult
     {

@@ -2,7 +2,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
 
-namespace Avixar.Infrastructure.Logging
+namespace Avixar.Infrastructure
 {
     public class FileLogger : ILogger
     {

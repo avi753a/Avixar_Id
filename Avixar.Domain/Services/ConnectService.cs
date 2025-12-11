@@ -1,6 +1,7 @@
 using Avixar.Data;
 using Avixar.Entity;
-using Avixar.Entity.Models;
+using Avixar.Entity;
+using Avixar.Infrastructure;
 using Microsoft.Extensions.Logging;
 using System.Security.Claims;
 
@@ -9,14 +10,14 @@ namespace Avixar.Domain
     public class ConnectService : IConnectService
     {
         private readonly IClientRepository _clientRepository;
-        private readonly ICacheService _cacheService;
+        private readonly RedisCacheService _cacheService;
         private readonly TokenService _tokenService;
         private readonly IUserRepository _userRepository;
         private readonly ILogger<ConnectService> _logger;
 
         public ConnectService(
             IClientRepository clientRepository,
-            ICacheService cacheService,
+            RedisCacheService cacheService,
             TokenService tokenService,
             IUserRepository userRepository,
             ILogger<ConnectService> logger)

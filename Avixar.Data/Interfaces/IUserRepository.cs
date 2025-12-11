@@ -1,6 +1,6 @@
 using Avixar.Entity;
-using Avixar.Entity.Entities;
-using Avixar.Entity.Models;
+using Avixar.Entity;
+using Avixar.Entity;
 
 namespace Avixar.Data
 {
@@ -23,5 +23,10 @@ namespace Avixar.Data
         Task<UserSettings?> GetUserSettingsAsync(Guid userId);
         Task<bool> UpsertUserSettingsAsync(UserSettings settings);
         Task<bool> MarkEmailAsVerifiedAsync(Guid userId);
+        
+        // MongoDB - Login History & Security Events
+        Task<List<LoginHistory>> GetLoginHistoryAsync(Guid userId, int limit = 50);
+        Task LogLoginAttemptAsync(LoginHistory log);
+        Task LogSecurityEventAsync(Guid userId, string eventType, string details);
     }
 }

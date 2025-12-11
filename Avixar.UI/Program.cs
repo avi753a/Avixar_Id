@@ -1,6 +1,6 @@
 using Avixar.Domain;
 using Avixar.Data;
-using Avixar.Infrastructure.Services;
+using Avixar.Infrastructure;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -42,7 +42,7 @@ try
     {
         var redis = ConnectionMultiplexer.Connect(redisConn + ",abortConnect=false");
         builder.Services.AddSingleton<IConnectionMultiplexer>(redis);
-        builder.Services.AddScoped<ICacheService, RedisCacheService>();
+        builder.Services.AddScoped<RedisCacheService>();
     }
     catch (Exception ex)
     {
@@ -57,17 +57,25 @@ try
     // Register Repositories
     builder.Services.AddScoped<IUserRepository, UserRepository>();
     builder.Services.AddScoped<IClientRepository, ClientRepository>();
+    builder.Services.AddScoped<IOrganizationRepository, OrganizationRepository>();
+    builder.Services.AddScoped<IOrganizationMemberRepository, OrganizationMemberRepository>();
+    builder.Services.AddScoped<IOAuthRepository, OAuthRepository>();
 
     // Register Domain Services
     builder.Services.AddScoped<IUserService, UserService>();
     builder.Services.AddScoped<IAuthService, AuthService>();
     builder.Services.AddScoped<IVerificationService, VerificationService>();
     builder.Services.AddScoped<IConnectService, ConnectService>();
+    builder.Services.AddScoped<IOrganizationService, OrganizationService>();
+    builder.Services.AddScoped<IOrganizationMemberService, OrganizationMemberService>();
     builder.Services.AddScoped<TokenService>();
     builder.Services.AddScoped<CloudinaryService>();
     builder.Services.AddScoped<EmailService>();
     builder.Services.AddScoped<OtpService>();
     builder.Services.AddScoped<VerificationTokenService>();
+
+    // Register Infrastructure Services
+    builder.Services.AddSingleton<MongoDbService>();
 
     // Health Checks
     builder.Services.AddHealthChecks()
@@ -219,7 +227,7 @@ try
     var app = builder.Build();
 
     // Global Exception Middleware (MUST be first to catch all exceptions)
-    app.UseMiddleware<Avixar.Infrastructure.Middleware.GlobalExceptionMiddleware>();
+    app.UseMiddleware<Avixar.Infrastructure.GlobalExceptionMiddleware>();
 
     // Use Serilog request logging
     app.UseSerilogRequestLogging();

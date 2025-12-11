@@ -1,6 +1,6 @@
 using Avixar.Entity;
-using Avixar.Entity.Models;
-using Avixar.Entity.Entities;
+using Avixar.Entity;
+using Avixar.Entity;
 
 namespace Avixar.Domain
 {

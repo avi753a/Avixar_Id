@@ -1,8 +1,8 @@
 using Avixar.Data;
 using Avixar.Entity;
-using Avixar.Entity.Entities;
-using Avixar.Entity.Models;
-using Avixar.Infrastructure.Services;
+using Avixar.Entity;
+using Avixar.Entity;
+using Avixar.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
@@ -229,7 +229,7 @@ namespace Avixar.Domain
                 _logger.LogInformation("Updating 2FA setting for user {UserId} to {Enabled}", userId, enabled);
                 
                 var settings = await _userRepository.GetUserSettingsAsync(userId) 
-                    ?? new Entity.Entities.UserSettings { UserId = userId };
+                    ?? new UserSettings { UserId = userId };
                 
                 settings.TwoFactorEnabled = enabled;
                 await _userRepository.UpsertUserSettingsAsync(settings);

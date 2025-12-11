@@ -1,8 +1,8 @@
 using Avixar.Data;
 using Avixar.Entity;
-using Avixar.Entity.Models;
-using Avixar.Entity.Entities;
-using Avixar.Infrastructure.Services;
+using Avixar.Entity;
+using Avixar.Entity;
+using Avixar.Infrastructure;
 using BCrypt.Net;
 using Microsoft.Extensions.Logging;
 

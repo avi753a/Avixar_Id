@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Avixar.Entity.Entities
+namespace Avixar.Entity
 {
     public class Client
     {

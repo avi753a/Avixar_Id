@@ -1,4 +1,4 @@
-namespace Avixar.Entity.Models
+namespace Avixar.Entity
 {
     /// <summary>
     /// Generic response wrapper for all service layer methods.

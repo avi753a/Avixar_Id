@@ -1,5 +1,5 @@
 using Avixar.Entity;
-using Avixar.Entity.Entities;
+using Avixar.Entity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

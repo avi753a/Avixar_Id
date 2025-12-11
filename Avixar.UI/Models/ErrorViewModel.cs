@@ -1,4 +1,4 @@
-namespace Avixar.UI.Models;
+namespace Avixar.UI;
 
 public class ErrorViewModel
 {

@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Configuration;
 
-namespace Avixar.Infrastructure.Extensions
+namespace Avixar.Infrastructure
 {
     /// <summary>
     /// Extension methods for IConfiguration to simplify access to common configuration values

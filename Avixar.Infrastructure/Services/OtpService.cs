@@ -1,10 +1,10 @@
-using Avixar.Entity.Entities;
+using Avixar.Entity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
 using System.Security.Cryptography;
 
-namespace Avixar.Infrastructure.Services
+namespace Avixar.Infrastructure
 {
     public class OtpService
     {

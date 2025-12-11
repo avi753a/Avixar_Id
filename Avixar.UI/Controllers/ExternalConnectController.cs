@@ -1,12 +1,12 @@
 using Avixar.Domain;
 using Avixar.Entity;
-using Avixar.Entity.Models;
+using Avixar.Entity;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Avixar.UI.Controllers
+namespace Avixar.UI
 {
     [ApiController]
     public class ExternalConnectController : ControllerBase
