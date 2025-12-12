@@ -167,27 +167,6 @@ namespace Avixar.UI
             var name = claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
             var subject = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
             var provider = info.Properties?.Items.ContainsKey("LoginProvider") == true ? info.Properties.Items["LoginProvider"] : "Unknown";
-
-            // If provider is not in properties, try to guess or use a default if it's from the scheme
-            // Actually Challenge(properties, provider) sets the scheme.
-            // We can get the scheme from info.Ticket.AuthenticationScheme? No.
-            // Let's assume Google/Microsoft based on claims or just pass it if we can.
-            // But we don't have it here easily unless we stored it.
-            // However, the user's previous code passed "Google" or "Microsoft".
-            // Let's try to extract it from the issuer of the claims?
-            // Or just use a generic "External" if we can't find it, but sp_SocialLogin needs it.
-            // Wait, `info.Properties.Items` might not have it.
-            // We can use `info.Ticket.AuthenticationScheme` if it was set?
-            // Actually, we can check which scheme authenticated.
-            
-            // Simplified: Just use "Google" or "Microsoft" based on what we know or pass it in returnUrl? No.
-            // Let's assume the provider name is part of the callback logic or we can infer it.
-            // For now, let's just use "External" or try to find it.
-            // Actually, the previous implementation had `provider` passed to `ExternalLoginCallback`? No.
-            
-            // Fix: We can't easily get the provider name here unless we put it in the state or correlation cookie.
-            // But `sp_SocialLogin` needs it.
-            // Let's try to get it from `info.Properties.Items[".AuthScheme"]`?
             
             // Hack: Check claims issuer.
             var issuer = claims.FirstOrDefault()?.Issuer ?? "External";

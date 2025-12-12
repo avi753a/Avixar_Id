@@ -27,6 +27,7 @@ namespace Avixar.UI
         public async Task<IActionResult> Index()
         {
             try
+            
             {
                 var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 _logger.LogInformation("Account page accessed by user: {UserId}", userId);
@@ -59,7 +60,7 @@ namespace Avixar.UI
                 ModelState.Remove("EmailVerified");
                 ModelState.Remove("Addresses");
                 
-                if (!ModelState.IsValid) return View("Index", model);
+                //if (!ModelState.IsValid) return View("Index", model);
 
                 model.UserId = userId;
 

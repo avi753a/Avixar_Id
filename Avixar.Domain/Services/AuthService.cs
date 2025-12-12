@@ -137,20 +137,37 @@ namespace Avixar.Domain
         {
             try
             {
+                var result = new LoginResult();
                 _logger.LogInformation("Social login attempt - Provider: {Provider}, Email: {Email}", provider, email);
-                
+
                 var userId = await _userRepository.LoginWithSocialAsync(provider, subjectId, email, displayName, pictureUrl);
-                
+
                 // Generate JWT token
                 var token = _tokenService.GenerateJwtToken(userId.ToString(), email, displayName);
 
-                var result = new LoginResult
+                var userResults = await _userRepository.LoginLocalAsync(email);
+                if (userResults != null)
                 {
-                    UserId = userId,
-                    Email = email,
-                    DisplayName = displayName,
-                    Token = token
-                };
+                    result = new LoginResult
+                    {
+                        UserId = userResults.UserId,
+                        Email = email,
+                        DisplayName = userResults.DisplayName,
+                        Token = token,
+                        ProfilePictureUrl = userResults.ProfilePictureUrl
+                    };
+                }
+                else
+                {
+                    result = new LoginResult
+                    {
+                        UserId = userId,
+                        Email = email,
+                        DisplayName = displayName,
+                        Token = token,
+                        ProfilePictureUrl = pictureUrl
+                    };
+                }
 
                 _logger.LogInformation("Social login successful - Provider: {Provider}, UserId: {UserId}", provider, userId);
                 return BaseReturn<LoginResult>.Success(result, "Social login successful");
